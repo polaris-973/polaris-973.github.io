@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>数据挖掘学习_HUI-Miner算法 - Paddey&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Paddey&#039;s Blog"><meta name="msapplication-TileImage" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Paddey&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="本文贡献 提出了一种新的结构——效用表（utility list）。不仅存储关于项集的使用程序信息，还存储关于项集是否该被修剪的启发式信息。 一种高效的算法HUI-Miner。不同于原有的算法，HUI-Miner不需要生成候选高效用项集，在从数据库构建初始效用列表后，HUI-Miner 可以从这些效用列表中挖掘高效用项集。 在各种数据库上进行了广泛的实验，以比较HUI-Miner与最先进的算法。实"><meta property="og:type" content="blog"><meta property="og:title" content="数据挖掘学习_HUI-Miner算法"><meta property="og:url" content="https://paddeyzhang.tech/2021/11/15/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_HUI-Miner%E7%AE%97%E6%B3%95/"><meta property="og:site_name" content="Paddey&#039;s Blog"><meta property="og:description" content="本文贡献 提出了一种新的结构——效用表（utility list）。不仅存储关于项集的使用程序信息，还存储关于项集是否该被修剪的启发式信息。 一种高效的算法HUI-Miner。不同于原有的算法，HUI-Miner不需要生成候选高效用项集，在从数据库构建初始效用列表后，HUI-Miner 可以从这些效用列表中挖掘高效用项集。 在各种数据库上进行了广泛的实验，以比较HUI-Miner与最先进的算法。实"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109152610485.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109152727732.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109155735047.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109162513348.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109183838542.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109184841333.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109190202593.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109192146132.png"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109193404531.png"><meta property="article:published_time" content="2021-11-15T13:46:13.000Z"><meta property="article:modified_time" content="2021-12-07T08:57:19.681Z"><meta property="article:author" content="paddeyzhang"><meta property="article:tag" content="数据挖掘 数学理论"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109152610485.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://paddeyzhang.tech/2021/11/15/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_HUI-Miner%E7%AE%97%E6%B3%95/"},"headline":"数据挖掘学习_HUI-Miner算法","image":["https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109152610485.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109152727732.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109155735047.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109162513348.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109183838542.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109184841333.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109190202593.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109192146132.png","https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109193404531.png"],"datePublished":"2021-11-15T13:46:13.000Z","dateModified":"2021-12-07T08:57:19.681Z","author":{"@type":"Person","name":"paddeyzhang"},"publisher":{"@type":"Organization","name":"Paddey's Blog","logo":{"@type":"ImageObject","url":"https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"}},"description":"本文贡献 提出了一种新的结构——效用表（utility list）。不仅存储关于项集的使用程序信息，还存储关于项集是否该被修剪的启发式信息。 一种高效的算法HUI-Miner。不同于原有的算法，HUI-Miner不需要生成候选高效用项集，在从数据库构建初始效用列表后，HUI-Miner 可以从这些效用列表中挖掘高效用项集。 在各种数据库上进行了广泛的实验，以比较HUI-Miner与最先进的算法。实"}</script><link rel="canonical" href="https://paddeyzhang.tech/2021/11/15/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_HUI-Miner%E7%AE%97%E6%B3%95/"><link rel="icon" href="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-15T13:46:13.000Z" title="11/15/2021, 21:46:13">2021-11-15</time></span><span class="level-item">Updated&nbsp;<time dateTime="2021-12-07T08:57:19.681Z" title="12/7/2021, 16:57:19">2021-12-07</time></span><span class="level-item"><a class="link-muted" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span><span class="level-item">16 minutes read (About 2386 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">数据挖掘学习_HUI-Miner算法</h1><div class="content"><h2 id="本文贡献"><a href="#本文贡献" class="headerlink" title="本文贡献"></a>本文贡献</h2><ol>
+<li>提出了一种新的结构——效用表（utility list）。不仅存储关于项集的使用程序信息，还存储关于项集是否该被修剪的启发式信息。</li>
+<li>一种高效的算法HUI-Miner。不同于原有的算法，HUI-Miner不需要生成候选高效用项集，在从数据库构建初始效用列表后，HUI-Miner 可以<strong>从这些效用列表中</strong>挖掘高效用项集。</li>
+<li>在各种数据库上进行了广泛的实验，以比较HUI-Miner与最先进的算法。实验结果表明，HUI-Miner算法优于上述算法。</li>
+</ol>
+<span id="more"></span>
+
+<h3 id="问题定义-problem-definition"><a href="#问题定义-problem-definition" class="headerlink" title="问题定义 problem definition"></a>问题定义 problem definition</h3><h2 id="参数定义"><a href="#参数定义" class="headerlink" title="参数定义"></a>参数定义</h2><p>eu(i)：元素i的效用值</p>
+<p>iu(i, T)：交易集T内元素i的数量</p>
+<p>u(i, T)：交易集T内所有元素i的总效用值，u(i, T) &#x3D; iu(i, T) × eu(i)</p>
+<p>u(X, T)：交易集T中集合X的总效用值</p>
+<p>u(X)：数据库DB中所有集合X的总效用值</p>
+<p>tu(T)：交易集T的总效用值</p>
+<p>twu(X)：数据库DB中包含集合X的所有交易集的总效用值</p>
+<p>T&#x2F;X：T&#x2F;X表示集合T中所有在（经过排序后）集合X后面的元素的集合！</p>
+<p>ru(X, T)：集合T中，T&#x2F;X的效用值总和</p>
+<p>i项扩展：若k项集的子树节点拥有（k+i）项，则称其为 k 项集的 i 项扩展。</p>
+<h3 id="相关工作-related-work"><a href="#相关工作-related-work" class="headerlink" title="相关工作 related work"></a>相关工作 related work</h3><p>这一节讨论了在高效用项集挖掘中出现的一些算法。包括算法思想继承自Apriori的一些算法，指出其与Apriori算法一样需要多次扫描数据库生成候选集、消除候选集。再讨论了基于FP-Growth算法生成FP-tree，减少扫描数据库的次数从而得到性能提升。但这些算法在大多数情况下还是会生成大量的候选项集。</p>
+<h2 id="效用表结构"><a href="#效用表结构" class="headerlink" title="效用表结构"></a>效用表结构</h2><p>为了挖掘高效用项集，许多以前的算法直接在原始数据库上执行。尽管基于FP-Growth的算法从前缀树生成候选项集，但他们必须通过扫描数据可来计算候选项的准确效用。在本节，作者提出并建议使用一个称为效用表（utility-list）的数据结构来维护数据库的效用信息。</p>
+<h3 id="初始化效用表-initial-utility-lists"><a href="#初始化效用表-initial-utility-lists" class="headerlink" title="初始化效用表 initial utility-lists"></a>初始化效用表 initial utility-lists</h3><p>在HUI-Miner中，每个项集都保存一个utility-list。通过两次数据库扫描操作来初始化存储效用信息的效用表。首先，通过数据库扫描所有项的twu(i)。如果项目i的TWU低于所给出的阀值，则在后续挖掘中将不再考虑任何包含有 i 的项目集。</p>
+<p>对于那些TWU超过阀值的项目，将他们按照TWU的大小升序排列。假设minutil为30的情况下，算法将不再考虑项f和g。如下图</p>
+<img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109152610485.png" alt="image-20211109152610485" style="zoom:150%;" />
+
+<p>剩下的项将按上面所提到的升序进行排序：e&lt;c&lt;b&lt;a&lt;d</p>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109152727732.png" alt="image-20211109152727732"></p>
+<p>定义8：将TWU小于minutil的所有项从交易中删除被称为“revised”修订，剩余项按TWU大小升序排序。</p>
+<p>再次扫描数据库，算法修订每个交易来初始化效用表。</p>
+<p>定义9。给定一个项目集X和一个带有X的事务(或项目集)T，该事务(或项目集)T中在X<strong>之后</strong>的所有项目的集合表示为T&#x2F;X。</p>
+<p>例如，图4中 T2&#x2F;{eb} &#x3D; {ad} 和 T2&#x2F;{c} &#x3D; {bad}。</p>
+<p>定义10。项目集X在交易T中的剩余效用记为ru(X, T)，是 X&#x2F;T 中所有项的效用之和。</p>
+<p>项集X的效用表的每个元素都包含三个字段:tid、iutil和rutil。</p>
+<ul>
+<li><p>字段tid表明一个包含X的交易项T</p>
+</li>
+<li><p>字段iutil是X在T中的效用，即u(X, T)</p>
+</li>
+<li><p>字段rutil是X在T中的剩余效用，即ru(X, T)</p>
+</li>
+</ul>
+<p>在第二次数据库扫描过程中，算法构建了如图5所示的初始效用表。</p>
+<p>以项集{c}的效用表举例。</p>
+<ul>
+<li>在T1中，u({c}， T1) &#x3D; 2， ru({c}， T1) &#x3D; u(b, T1) + u(d, T1) &#x3D; 2 + 5 &#x3D; 7，因此元素&lt; 1,2,7 &gt;就是{c}的效用表(&lt;x, y, z&gt;表示&lt;tid, iutil, rutil&gt;， 1表示T1)。</li>
+<li>在T2中，u({c}， T2) &#x3D; 3，ru({c}， T2) &#x3D; u(b, T2) + u(a, T2) + u(d, T2) &#x3D; 2 + 4 + 5 &#x3D; 11，因此元素&lt; 2,3,11 &gt;也属于{c}的实用列表。其余的可以用同样方法算出来。</li>
+</ul>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109155735047.png" alt="image-20211109155735047"></p>
+<h3 id="2-项集的效用表-utility-lists-of-2-itemsets"><a href="#2-项集的效用表-utility-lists-of-2-itemsets" class="headerlink" title="2-项集的效用表 utility-lists of 2-itemsets"></a>2-项集的效用表 utility-lists of 2-itemsets</h3><p>不需要数据库扫描，可以通过{x}的效用列表和{y}的效用表两者的交集来构造2-itemset {xy}的效用列表。</p>
+<p>该算法通过比较两个效用列表中的TID来识别公共交易项。假设公用事业列表的长度分别为m和n，假设效用列表的长度分别为m和n，那么最多(m + n)比较就足以识别，因为实用列表中的所有tid都是<strong>有序</strong>的。识别过程实际上是一个双向比较。例如，图5中项目集{e}和{c}的效用列表之间的tid比较如图6(a)所示。</p>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109162513348.png" alt="image-20211109162513348"></p>
+<p>对于每个交易t，算法将生成元素E并将其添加到{xy}的效用列表中。E的tid字段是t的tid, E的iutil是{x}和{y}效用列表中与t相关的iutil之和。假设x在y之前，然后将E的rutil赋值为{y}的效用列表中与t相关的rutil。</p>
+<p>通过比较两个效用列表中的tid，取交集生成新的多元效用列表，</p>
+<p>上图(a)第一行是交易表T中包含{e}的项的下标，第二行是交易表T中包含{c}的项的下标(对照Fig.4)，</p>
+<p>上图(b)其中</p>
+<ul>
+<li>每一项的Iutils取两者Iutils的和，Rutils取两者中小的Rutils(对照Fig.5，因为它们都是排好序的，前面的项与后面的项结合，必然是会导致剩余项的效用值减少(Rutils)，剩下没合并的项少了)</li>
+<li>Iutils这一列的值相加得到的和就是该项集的效用值</li>
+<li>iutils和rutils这两列的值相加得到的就是该项集的扩展项集的ru值</li>
+</ul>
+<h3 id="k-项集的效用表-utility-lists-of-k-itemsets（k-gt-x3D-3）"><a href="#k-项集的效用表-utility-lists-of-k-itemsets（k-gt-x3D-3）" class="headerlink" title="k-项集的效用表 utility-lists of k-itemsets（k&gt;&#x3D;3）"></a>k-项集的效用表 utility-lists of k-itemsets（k&gt;&#x3D;3）</h3><p>类似于构造2-itemset的效用列表。例如，为了构造{eba}的效用列表，我们可以在图6(b)中将{eb}和{ea}的效用列表取交集，得到的效用列表如图7(a)所示。图4中的数据库视图T2和T5中确实出现了Itemset {eba}，但是T2和T5中项集的效用分别是10和17，而不是14和25。</p>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109183838542.png" alt="image-20211109183838542"></p>
+<p>造成这种误算的原因是计算中有重复计算，即{e}的效用被加了两遍，所以需要剪掉u(e,T)。</p>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109184841333.png"></p>
+<h2 id="HUI-Miner"><a href="#HUI-Miner" class="headerlink" title="HUI-Miner"></a>HUI-Miner</h2><p>在从数据库构建初始效用列表之后，HUI-Miner算法可以有效地从效用表中挖掘所有高效用项目集，就像Eclat算法挖掘频繁项目集[26]一样。本节首先介绍了HUI-Miner的搜索空间，然后提出了算法的剪枝策略。最后，给出了HUI- Miner算法和一些实现细节。</p>
+<h3 id="搜索空间-search-space"><a href="#搜索空间-search-space" class="headerlink" title="搜索空间 search space"></a>搜索空间 search space</h3><p>高实用项集挖掘问题的搜索空间可以表示为集枚举树（如下图）。给定一组项I &#x3D; {i1, i2, i3，…， in}和所有项的总顺序(假设i1 &lt; i2 &lt;···&lt; in)，则表示所有项集的集合枚举树可以构造如下：</p>
+<ul>
+<li><p>首先，创建树的根；（根节点为空）</p>
+</li>
+<li><p>其次，分别创建根的n个子节点，表示n个1-项集;</p>
+</li>
+<li><p>第三，对于表示项集{is···ie}(1≤s≤e &lt; n)的节点，表示项集{is···iei(e+1)}， {is···iei(e+2)}，…， {is···iein}被创建。</p>
+</li>
+<li><p>重复执行第三步，直到创建所有叶节点。</p>
+</li>
+</ul>
+<p>例如，给定I &#x3D; {e, c, b, a, d}和e &lt; c &lt; b &lt; a &lt; d，图8描绘了表示I的所有项目集的集合枚举树</p>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109190202593.png" alt="image-20211109190202593"></p>
+<h3 id="剪枝策略-pruning-strategy"><a href="#剪枝策略-pruning-strategy" class="headerlink" title="剪枝策略 pruning strategy"></a>剪枝策略 pruning strategy</h3><p>穷举搜索可以发现所有高效用项集，但非常耗时，因为对于许多数据库，项的数量都很大。对于一个有n个条目的数据库，穷举搜索必须检查2的n次方个项集。</p>
+<p>为了减少搜索空间，我们可以利用项集的效用列表中的iutils和rutils。一个项集的效用列表中所有iutils的和就是该项集的效用，所以该项集如果效用大于给定的minutil就被认为是高效用的。效用列表中<strong>所有iutils和rutils的总和</strong>为HUI-Miner提供了关于是否应该修剪项集的关键信息。</p>
+<p>剪枝策略为：</p>
+<ul>
+<li>若该项目集对应效用列表所有iutils的总和大于阀值，则该项集为高效用项集。</li>
+<li>若该项目集对应效用列表所有iutils与rutils的总和大于阀值，则该项目集需要进一步判定。</li>
+<li>若该项目集对应效用列表所有iutils与rutils的总和小于阀值，则该项目集及其所有扩展都为低效用，对其进行剪枝。</li>
+</ul>
+<p>例如，考虑图6(b)中的实用程序列表。Itemset {ec}应该被修剪，因为它的实用列表中所有iutils和rutils的和(即24)小于minutil(即30)。因此，不需要检查itemset {ec}的7个扩展项(见图8)。</p>
+<h3 id="HUI-Miner算法-HUI-Miner-Algorithm"><a href="#HUI-Miner算法-HUI-Miner-Algorithm" class="headerlink" title="HUI-Miner算法 HUI-Miner Algorithm"></a>HUI-Miner算法 HUI-Miner Algorithm</h3><p>伪代码</p>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109192146132.png" alt="image-20211109192146132"></p>
+<p>同时为了提高效率，减少对效用列表的扫描次数，集合枚举树中一个节点的所有子节点所代表的项集具有相同的前缀项集。为此，我们将扩展项与前缀项分开存储，Fig.7(b)中的表可以构造成如下图结构：</p>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211109193404531.png" alt="image-20211109193404531"></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>数据挖掘学习_HUI-Miner算法</p><p><a href="https://paddeyzhang.tech/2021/11/15/数据挖掘学习_HUI-Miner算法/">https://paddeyzhang.tech/2021/11/15/数据挖掘学习_HUI-Miner算法/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>paddeyzhang</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-11-15</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2021-12-07</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/">数据挖掘 数学理论</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/12/05/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_EFIM%20Algorithm/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">数据挖掘学习_EFIM Algorithm</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/11/08/Pytorch_DeepLizard%E6%95%99%E7%A8%8B25-26%EF%BC%9A%E8%AE%AD%E7%BB%83CNN/"><span class="level-item">Pytorch_DeepLizard教程25-26：训练CNN</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="PaddeyZhang"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">PaddeyZhang</p><p class="is-size-6 is-block">Master of Computer Science and Technology (GDUT)</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>GuangZhou, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">32</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">8</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/polaris-973" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Email" href="mailto:paddeyzhang@gmail.com"><i class="fas fa-envelope"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/polaris-973"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">Categories</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Latex/"><span class="level-start"><span class="level-item">Latex</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/OpenCV/"><span class="level-start"><span class="level-item">OpenCV</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2-Github-hexo/"><span class="level-start"><span class="level-item">创建博客_Github_hexo</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%B7%E9%A2%98/"><span class="level-start"><span class="level-item">刷题</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">数学理论学习</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="level-start"><span class="level-item">数据挖掘</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">机器学习 深度学习</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="level-start"><span class="level-item">机器学习 深度学习 Pytorch</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="level-start"><span class="level-item">统计学习方法</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.963Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E5%A4%9A%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8BAccuracy,%20Precision,%20Recall%E5%92%8CF1-score%E7%9A%84%E8%B6%85%E7%BA%A7%E6%97%A0%E6%95%8C%E6%B7%B1%E5%85%A5%E6%8E%A2%E8%AE%A8/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.940Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.925Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/URLNet/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.799Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/Pytorch_DeepLizard%E6%95%99%E7%A8%8B27%EF%BC%9A%E4%BD%BF%E7%94%A8Pytorch%E5%88%9B%E5%BB%BA%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.717Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/OLAP%E5%92%8C%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93/"> </a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">February 2023</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">13</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">Tags</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Latex/"><span class="tag">Latex</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">傅里叶变换 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%B7%E9%A2%98-leetcode-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">刷题 leetcode 数据结构</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">数据挖掘 数学理论</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="tag">机器学习 深度学习 Pytorch</span><span class="tag">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%BC%8F-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">泰勒展开式 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">线性代数 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="tag">统计学习方法</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 paddeyzhang</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

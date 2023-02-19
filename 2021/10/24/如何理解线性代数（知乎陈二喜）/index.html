@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>如何理解线性代数（知乎陈二喜） - Paddey&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Paddey&#039;s Blog"><meta name="msapplication-TileImage" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Paddey&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="线性代数的本质 - 系列合集狂吹这个关于线性代数理解的可视化视频！！ 注：此文为知乎作者陈二喜所写，由于该作者账号注销，便保存以之后拜读，侵权则删 0， 引言 人类在探索每一个科学问题的时候，为了简化问题，都会把具体科学问题看作一个机器。给这个机器输入一个条件，机器会运转，对条件进行加工，然后输出一种现象。"><meta property="og:type" content="blog"><meta property="og:title" content="如何理解线性代数（知乎陈二喜）"><meta property="og:url" content="https://paddeyzhang.tech/2021/10/24/%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%88%E7%9F%A5%E4%B9%8E%E9%99%88%E4%BA%8C%E5%96%9C%EF%BC%89/"><meta property="og:site_name" content="Paddey&#039;s Blog"><meta property="og:description" content="线性代数的本质 - 系列合集狂吹这个关于线性代数理解的可视化视频！！ 注：此文为知乎作者陈二喜所写，由于该作者账号注销，便保存以之后拜读，侵权则删 0， 引言 人类在探索每一个科学问题的时候，为了简化问题，都会把具体科学问题看作一个机器。给这个机器输入一个条件，机器会运转，对条件进行加工，然后输出一种现象。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://pic1.zhimg.com/80/v2-06f86ff2d27d27fc0fc1a3aae6a3e139_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://www.zhihu.com/equation?tex=m/s%5E%7B2%7D"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-84608df19ca2affc7017652161d75b73_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-374a45ff4f8923510c74ec0f73df3e0c_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-9f44b4f0dc04bb500919a22279dedeb7_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pica.zhimg.com/80/v2-09018f7ab06755db250b8fa8038aca10_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-028cabacb57f58fa18378da22645ecc5_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-49e1e181dad0acf80f68025d59f70efa_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pica.zhimg.com/80/v2-f64d036d07240691f6eb11ef51fabd68_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-ae63f800cdbc0537437b01c727ac7e99_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic1.zhimg.com/80/v2-7210e74f1965d5e82493685d714c8da9_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic1.zhimg.com/80/v2-5af093ef7df22153020ff6c8fa571ce6_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-fc4f3a35330f112f59307e6e3f76dbb6_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://pic1.zhimg.com/80/v2-0f526dcfd8cc5002a70a7944c3ede91e_720w.jpg?source=1940ef5c"><meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Clambda"><meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Clambda"><meta property="og:image" content="https://pic1.zhimg.com/80/v2-8d36490172ed5deeaa2acf8578a02d86_720w.jpg?source=1940ef5c"><meta property="article:published_time" content="2021-10-24T13:40:51.000Z"><meta property="article:modified_time" content="2021-11-01T13:49:39.227Z"><meta property="article:author" content="paddeyzhang"><meta property="article:tag" content="线性代数 数学理论"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://pic1.zhimg.com/80/v2-06f86ff2d27d27fc0fc1a3aae6a3e139_720w.jpg?source=1940ef5c"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://paddeyzhang.tech/2021/10/24/%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%88%E7%9F%A5%E4%B9%8E%E9%99%88%E4%BA%8C%E5%96%9C%EF%BC%89/"},"headline":"如何理解线性代数（知乎陈二喜）","image":[],"datePublished":"2021-10-24T13:40:51.000Z","dateModified":"2021-11-01T13:49:39.227Z","author":{"@type":"Person","name":"paddeyzhang"},"publisher":{"@type":"Organization","name":"Paddey's Blog","logo":{"@type":"ImageObject","url":"https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"}},"description":"线性代数的本质 - 系列合集狂吹这个关于线性代数理解的可视化视频！！ 注：此文为知乎作者陈二喜所写，由于该作者账号注销，便保存以之后拜读，侵权则删 0， 引言 人类在探索每一个科学问题的时候，为了简化问题，都会把具体科学问题看作一个机器。给这个机器输入一个条件，机器会运转，对条件进行加工，然后输出一种现象。"}</script><link rel="canonical" href="https://paddeyzhang.tech/2021/10/24/%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%88%E7%9F%A5%E4%B9%8E%E9%99%88%E4%BA%8C%E5%96%9C%EF%BC%89/"><link rel="icon" href="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-24T13:40:51.000Z" title="10/24/2021, 21:40:51">2021-10-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2021-11-01T13:49:39.227Z" title="11/1/2021, 21:49:39">2021-11-01</time></span><span class="level-item"><a class="link-muted" href="/categories/%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0/">数学理论学习</a></span><span class="level-item">18 minutes read (About 2754 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">如何理解线性代数（知乎陈二喜）</h1><div class="content"><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ys411472E">线性代数的本质 - 系列合集</a>狂吹这个关于线性代数理解的可视化视频！！</p>
+<p><strong>注：此文为知乎作者陈二喜所写，由于该作者账号注销，便保存以之后拜读，侵权则删</strong></p>
+<p>0， 引言</p>
+<p>人类在探索每一个科学问题的时候，为了简化问题，都会把具体科学问题看作一个机器。给这个机器输入一个条件，机器会运转，对条件进行加工，然后输出一种现象。</p>
+<span id="more"></span>
+
+<p><img src="https://pic1.zhimg.com/80/v2-06f86ff2d27d27fc0fc1a3aae6a3e139_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>通过研究输入与输出，有时候可以推测出机器内部的构造，这就是所谓的科学。比如牛顿，他发现：给物体一个力，就能使物体产生一个加速度，力越大，加速度就越大。</p>
+<p>当然，有时候研究了输入与输出，依然没有搞清楚机器内部的原理，只是知道一个大概的规律，那么就干脆先不管内部原理，先把这个规律为自己所用。这就是所谓的工程。比如，人们通过做实验发现，给机翼一个气流，机翼就能够产生一个升力，人们并不能解释升力是怎么产生的，但是不妨碍自己使用，于是给一个驾驶舱装上两个翅膀，飞机就上天了。</p>
+<p>人类探索自然运行的原理，归根结底是想利用这些原理，对万物进行定量控制。</p>
+<p>定量控制的意思是说：牛顿写出《原理》这本书的时候，不能够含糊其辞的说，给物体很大的力，物体就能产生很大的加速度。而是必须告诉大众：给一个多少Kg的物体多少N的力能够产生多少 <img src="https://www.zhihu.com/equation?tex=m/s%5E%7B2%7D" alt="[公式]"> 的加速度。</p>
+<p>这时候，数学应运而生。简而言之，数学就是人类在解释这个世界是怎样运行的时候，人为发明的一种工具，有了这种工具，我们可以不用那么含糊其辞。</p>
+<p>于是，就有了函数。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-84608df19ca2affc7017652161d75b73_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>于是就有了F&#x3D;Ma，于是就有了各种各样的公式、定理及定律。</p>
+<p>1， 什么是线性代数</p>
+<p>函数研究的是，输入一个数，经过函数运算之后，产出一个数。而有时候我们研究的问题太复杂，需要输入很多个数，经过运算之后，产出很多个数。这时候，线性代数应运而生。</p>
+<p>很多个数，我们可以用括号括起来，形成一个数组。在几何学上，数组被称作向量，向量就是一个有大小有方向的直线段。</p>
+<p>所以，<strong>线性代数就是：输入一段直线，经过加工之后，产出一段直线</strong>。</p>
+<p>线性的意思就是，你往机器里扔进去直线，产出的肯定也是直线。</p>
+<p>当然，在数学上，线性有着及其严格的定义，并不是像我刚才说的那么简单。不过，正由于线性的严格定义，才能够实现：输入一段直线，产出一段直线。</p>
+<p>与函数相类似，用图描述线性代数就是：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-374a45ff4f8923510c74ec0f73df3e0c_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>输入叫向量，内部原理叫矩阵，输出叫向量。</p>
+<p>2， 矩阵是怎么对直线进行加工的？</p>
+<p>通过函数表达式y&#x3D;5x+9我们可以一目了然地知道，输入的自变量x是怎样一步步被加工，最后输出因变量y的。</p>
+<p>同样，我们通过观察矩阵，也可以一目了然地知道，输入的直线是怎样一步步被加工的。</p>
+<p>假如输入的直线为[1,2]。</p>
+<p>插一句，向量[1,2]的全称其实是1i+2j，i和j叫做基向量。意思是说，我们目前所写出来的向量，是以这两个向量作为<strong>基本原料</strong>，拼凑组合出来的。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-9f44b4f0dc04bb500919a22279dedeb7_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>假如用于加工向量的矩阵为[0,1 -1,0]，</p>
+<p>那么这个矩阵所代表的加工过程就是，把基向量i，换成矩阵中的第一列，把基向量j换成矩阵中的第二列。然后再以新的基向量为原料，重新利用[1，2]拼凑一个新的向量。用新的基向量拼凑出来的新向量就是输出。</p>
+<p><img src="https://pica.zhimg.com/80/v2-09018f7ab06755db250b8fa8038aca10_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>通过展示矩阵对向量的加工过程，我们可以“看出”上面例子的解。</p>
+<p>下面，我们用熟悉的口诀“左行乘右列”来检验一下上面的答案是否靠谱。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-028cabacb57f58fa18378da22645ecc5_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>其实，计算所用的口诀就来源于上述加工过程。</p>
+<p>同理，稍微复杂一些的三维向量遇到三维矩阵后的加工过程如下图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-49e1e181dad0acf80f68025d59f70efa_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>3， 行列式是什么？</p>
+<p><strong>矩阵对向量进行加工，行列式能够描述这种加工作用的强弱。</strong></p>
+<p>上文提到，矩阵对向量加工是通过改变基向量来实现的。以二维为例，默认的基向量张成的面积为1，经过矩阵变换之后形成的新的基向量张成的面积变为了S，那么这个矩阵的行列式就为S。</p>
+<p><img src="https://pica.zhimg.com/80/v2-f64d036d07240691f6eb11ef51fabd68_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>有时候，矩阵的行列式为0，说明新的基向量张成的面积为0，说明新的基向量发生了重合。</p>
+<p>有时候，矩阵的行列式为负数，说明线性空间发生了翻转。也就是说，本来，默认的两个基向量，j在i的逆时针方向，经过矩阵加工之后，线性空间发生了翻转，导致i在j的逆时针方向。如下图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-ae63f800cdbc0537437b01c727ac7e99_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>4， 什么叫单位矩阵？</p>
+<p>矩阵能够对向量进行加工，产生一个新的向量。但有一种矩阵比较特殊，无论给它输入什么样的向量，加工后产生的向量都与原来的相同，这种矩阵叫单位矩阵。</p>
+<p>既然矩阵对向量的加工作用是通过改变基向量来实现的，如果想保持输入与输出相等，那么只需要保证矩阵不会改变基向量即可。</p>
+<p>所以，二阶单位矩阵，三阶单位矩阵以及n阶单位矩阵可写为：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-7210e74f1965d5e82493685d714c8da9_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>5， 什么叫逆矩阵？</p>
+<p>矩阵对向量具有加工作用，两个矩阵相乘，则表示的是两种加工作用的叠加。也就是说：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-5af093ef7df22153020ff6c8fa571ce6_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>如果上图中向量1等于向量3，那么就说明，向量经过矩阵1和矩阵2的加工之后，又变成了原来的自己。进一步说明，矩阵1和矩阵2对于向量的加工作用刚好相反。那么就说矩阵1和矩阵2互为逆矩阵。</p>
+<p>明白了原理，也就知道如何求解逆矩阵了。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-fc4f3a35330f112f59307e6e3f76dbb6_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>插个题外话：为什么行列式为0的矩阵没有逆矩阵？</p>
+<p>因为行列式如果为0，表明矩阵在在对向量变换的过程中，将向量空间压缩到了一个更低的维度上。以二维矩阵为例：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-0f526dcfd8cc5002a70a7944c3ede91e_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>向量降维后，将无法再还原回原来的样子。</p>
+<p>就好比有一个三维长方体，从大部分角度观察，都是一个三维结构，但是当正视俯视侧视时，你只能观察到一个二维矩形。我们是无法通过这个二维矩形的样子，来推测出原来的长方体的。</p>
+<p>6， 什么是秩</p>
+<p>矩阵可以将一个向量进行加工，变成另外一个向量。</p>
+<p>比如一个3阶矩阵，可以对很多三维向量进行加工，变成很多新的三维向量。</p>
+<p>有时候，所有的这些新的三维向量，最终都落在一条直线上，即1维。</p>
+<p>有时候，所有的新的三维向量最终都落在一个二维平面上，即2维。</p>
+<p>有时候，所有的新的三维向量最终都落在三维空间上，即3维。</p>
+<p>以上情况分别对应于秩为1，2，3。</p>
+<p>总之，秩就是描述这个矩阵会不会将输入的向量空间降维。如果没有降维，这种情况称为满秩。</p>
+<p>7， 什么是特征向量、特征值？</p>
+<p>矩阵能够对向量进行加工，变成一个新的向量。</p>
+<p>有时候会出现这种情况：</p>
+<p>对于某一个矩阵，输入一个向量，经过矩阵的加工后，新生成的向量与原来的向量共线。也就是说这个矩阵对这个特定的向量的加工过程中没有改变其方向。</p>
+<p>那么，这个不会被改变方向的向量叫做这个矩阵的特征向量。</p>
+<p>虽然不会被改变方向，但是改变了大小，新的向量长度是原来的向量的长度的 <img src="https://www.zhihu.com/equation?tex=%5Clambda" alt="[公式]"> 倍，这个 <img src="https://www.zhihu.com/equation?tex=%5Clambda" alt="[公式]"> 叫做特征向量的特征值。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-8d36490172ed5deeaa2acf8578a02d86_720w.jpg?source=1940ef5c" alt="img"></p>
+<p>8，有所疏漏，写的不全，想听哪里在评论区留言。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>如何理解线性代数（知乎陈二喜）</p><p><a href="https://paddeyzhang.tech/2021/10/24/如何理解线性代数（知乎陈二喜）/">https://paddeyzhang.tech/2021/10/24/如何理解线性代数（知乎陈二喜）/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>paddeyzhang</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-10-24</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2021-11-01</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/">线性代数 数学理论</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/10/24/%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2%E5%85%AC%E5%BC%8F%EF%BC%88%E7%9F%A5%E4%B9%8E%E9%99%88%E4%BA%8C%E5%96%9C%EF%BC%89/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">如何理解傅里叶变换公式（知乎陈二喜）</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/10/18/v2rayN-%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B%E5%8F%8A%E5%8F%AF%E8%83%BD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"><span class="level-item">v2rayN 配置使用教程及可能碰到的问题</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="PaddeyZhang"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">PaddeyZhang</p><p class="is-size-6 is-block">Master of Computer Science and Technology (GDUT)</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>GuangZhou, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">32</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">8</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/polaris-973" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Email" href="mailto:paddeyzhang@gmail.com"><i class="fas fa-envelope"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/polaris-973"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">Categories</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Latex/"><span class="level-start"><span class="level-item">Latex</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/OpenCV/"><span class="level-start"><span class="level-item">OpenCV</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2-Github-hexo/"><span class="level-start"><span class="level-item">创建博客_Github_hexo</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%B7%E9%A2%98/"><span class="level-start"><span class="level-item">刷题</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">数学理论学习</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="level-start"><span class="level-item">数据挖掘</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">机器学习 深度学习</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="level-start"><span class="level-item">机器学习 深度学习 Pytorch</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="level-start"><span class="level-item">统计学习方法</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.963Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E5%A4%9A%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8BAccuracy,%20Precision,%20Recall%E5%92%8CF1-score%E7%9A%84%E8%B6%85%E7%BA%A7%E6%97%A0%E6%95%8C%E6%B7%B1%E5%85%A5%E6%8E%A2%E8%AE%A8/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.940Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.925Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/URLNet/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.799Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/Pytorch_DeepLizard%E6%95%99%E7%A8%8B27%EF%BC%9A%E4%BD%BF%E7%94%A8Pytorch%E5%88%9B%E5%BB%BA%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.717Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/OLAP%E5%92%8C%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93/"> </a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">February 2023</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">13</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">Tags</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Latex/"><span class="tag">Latex</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">傅里叶变换 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%B7%E9%A2%98-leetcode-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">刷题 leetcode 数据结构</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">数据挖掘 数学理论</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="tag">机器学习 深度学习 Pytorch</span><span class="tag">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%BC%8F-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">泰勒展开式 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">线性代数 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="tag">统计学习方法</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 paddeyzhang</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Pytorch_DeepLizard教程14-16：训练数据与预处理 - Paddey&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Paddey&#039;s Blog"><meta name="msapplication-TileImage" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Paddey&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="此笔记引用自文章知乎链接并修改 学习笔记这里开始进入整个教程的第二部分，分为四个 section，分别为：  Prepare the data Build the model Train the model Analyze the model’s results  这篇笔记是 section 1 的3集的，这一部分主要讲数据集和数据的预处理。 - Episode 14 of 33我的妈呀，杰克马居"><meta property="og:type" content="blog"><meta property="og:title" content="Pytorch_DeepLizard教程14-16：训练数据与预处理"><meta property="og:url" content="https://paddeyzhang.tech/2021/11/02/Pytorch_DeepLizard%E6%95%99%E7%A8%8B14-16%EF%BC%9A%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86/"><meta property="og:site_name" content="Paddey&#039;s Blog"><meta property="og:description" content="此笔记引用自文章知乎链接并修改 学习笔记这里开始进入整个教程的第二部分，分为四个 section，分别为：  Prepare the data Build the model Train the model Analyze the model’s results  这篇笔记是 section 1 的3集的，这一部分主要讲数据集和数据的预处理。 - Episode 14 of 33我的妈呀，杰克马居"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-9736cf593b1a5e95e5a7d86cd7a62441_720w.jpg"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-dd4d60fec9ab1ea9a3af68e4ddee66fe_720w.jpg"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-94c56a43caef6930163eb7462f817446_720w.jpg"><meta property="og:image" content="https://pic4.zhimg.com/80/v2-a51317278627f232bb127742cdb220d7_720w.jpg"><meta property="og:image" content="https://pic2.zhimg.com/v2-e5c7c109e14a5ddf707515cb02841e11_180x120.jpg"><meta property="og:image" content="https://pic1.zhimg.com/80/v2-1da27013a1c471ff3af37554d07e742c_720w.jpg"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-f85c499962e17464b519db70990ad46e_720w.jpg"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-6a5e68d32cf1d77d43a378a4e1dabe2e_720w.jpg"><meta property="og:image" content="https://pic4.zhimg.com/80/v2-37d8c6fe04a001dc201d468cbaba2367_720w.jpg"><meta property="og:image" content="https://pic3.zhimg.com/80/v2-26e811357f5fccfa24ad51b39be9d8fe_720w.jpg"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-c11b72881cf235329529ec16200554fd_720w.jpg"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-f3089b255d3e301975454cac42fc7c75_720w.jpg"><meta property="article:published_time" content="2021-11-02T15:46:13.000Z"><meta property="article:modified_time" content="2021-11-02T17:48:04.361Z"><meta property="article:author" content="paddeyzhang"><meta property="article:tag" content="机器学习 深度学习 Pytorch"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://pic2.zhimg.com/80/v2-9736cf593b1a5e95e5a7d86cd7a62441_720w.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://paddeyzhang.tech/2021/11/02/Pytorch_DeepLizard%E6%95%99%E7%A8%8B14-16%EF%BC%9A%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86/"},"headline":"Pytorch_DeepLizard教程14-16：训练数据与预处理","image":["https://pic2.zhimg.com/80/v2-9736cf593b1a5e95e5a7d86cd7a62441_720w.jpg","https://pic3.zhimg.com/80/v2-dd4d60fec9ab1ea9a3af68e4ddee66fe_720w.jpg","https://pic3.zhimg.com/80/v2-94c56a43caef6930163eb7462f817446_720w.jpg","https://pic4.zhimg.com/80/v2-a51317278627f232bb127742cdb220d7_720w.jpg","https://pic2.zhimg.com/v2-e5c7c109e14a5ddf707515cb02841e11_180x120.jpg","https://pic1.zhimg.com/80/v2-1da27013a1c471ff3af37554d07e742c_720w.jpg","https://pic3.zhimg.com/80/v2-f85c499962e17464b519db70990ad46e_720w.jpg","https://pic3.zhimg.com/80/v2-6a5e68d32cf1d77d43a378a4e1dabe2e_720w.jpg","https://pic4.zhimg.com/80/v2-37d8c6fe04a001dc201d468cbaba2367_720w.jpg","https://pic3.zhimg.com/80/v2-26e811357f5fccfa24ad51b39be9d8fe_720w.jpg","https://pic2.zhimg.com/80/v2-c11b72881cf235329529ec16200554fd_720w.jpg","https://pic2.zhimg.com/80/v2-f3089b255d3e301975454cac42fc7c75_720w.jpg"],"datePublished":"2021-11-02T15:46:13.000Z","dateModified":"2021-11-02T17:48:04.361Z","author":{"@type":"Person","name":"paddeyzhang"},"publisher":{"@type":"Organization","name":"Paddey's Blog","logo":{"@type":"ImageObject","url":"https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"}},"description":"此笔记引用自文章知乎链接并修改 学习笔记这里开始进入整个教程的第二部分，分为四个 section，分别为：  Prepare the data Build the model Train the model Analyze the model’s results  这篇笔记是 section 1 的3集的，这一部分主要讲数据集和数据的预处理。 - Episode 14 of 33我的妈呀，杰克马居"}</script><link rel="canonical" href="https://paddeyzhang.tech/2021/11/02/Pytorch_DeepLizard%E6%95%99%E7%A8%8B14-16%EF%BC%9A%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86/"><link rel="icon" href="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-02T15:46:13.000Z" title="11/2/2021, 23:46:13">2021-11-02</time></span><span class="level-item">Updated&nbsp;<time dateTime="2021-11-02T17:48:04.361Z" title="11/3/2021, 01:48:04">2021-11-03</time></span><span class="level-item"><a class="link-muted" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/">机器学习 深度学习 Pytorch</a></span><span class="level-item">33 minutes read (About 4965 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Pytorch_DeepLizard教程14-16：训练数据与预处理</h1><div class="content"><p>此笔记引用自文章<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/109014103">知乎链接</a>并修改</p>
+<h2 id="学习笔记"><a href="#学习笔记" class="headerlink" title="学习笔记"></a>学习笔记</h2><p>这里开始进入整个教程的第二部分，分为四个 section，分别为：</p>
+<ol>
+<li><strong>Prepare the data</strong></li>
+<li>Build the model</li>
+<li>Train the model</li>
+<li>Analyze the model’s results</li>
+</ol>
+<p>这篇笔记是 section 1 的3集的，这一部分主要讲数据集和数据的预处理。</p>
+<h3 id="Episode-14-of-33"><a href="#Episode-14-of-33" class="headerlink" title="- Episode 14 of 33"></a>- Episode 14 of 33</h3><p>我的妈呀，杰克马居然都上镜了：</p>
+<blockquote>
+<p>If you want to make machine smart, the machine must drink data.</p>
+</blockquote>
+<p>这一集主要讲了两个内容：在人工智能中数据集扮演了什么样的角色，以及本教程采用的 Fashion-MNIST数据集的由来。</p>
+<h3 id="（1）人工智能中数据集扮演了什么样的角色"><a href="#（1）人工智能中数据集扮演了什么样的角色" class="headerlink" title="（1）人工智能中数据集扮演了什么样的角色"></a>（1）人工智能中数据集扮演了什么样的角色</h3><p>简单概括一下，视频大概讲了这么几个事情吧：</p>
+<p>统计学习尤其是深度学习方法的出现，使得传统的软件开发范式发生了转变。过去写软件是直接写代码来实现功能，是1.0时代；而2.0时代不再用代码本身来规定行为，而是用数据来约束行为，用代码来构建框架（比如神经网络），来让机器自己学习如何行为。</p>
+<p>所以对使用的数据集有更好的理解，有助于模型的训练。</p>
+<blockquote>
+<p><strong>对数据及的关注点：</strong><br>- 谁创建了数据集？<br>- 数据集是如何创建的？<br>- 使用了哪些转换？<br>- 数据集的目的&#x2F;用途？<br>- 可能导致什么意外结果？<br>- 数据集是否有偏差？<br>- 数据集存在道德问题吗？</p>
+</blockquote>
+<p>另一方面就是，人们对人工智能历来有一种恐惧的观点，因为觉得是机器来代替人做决定。但实际上机器是通过数据来学习的，所以其实真正要规范的是收集和使用数据的人和机构，要确保他们不用数据干坏事。在一些细分领域几大互联网巨头以及开始领跑，但是在更多的市场及公共领域，比如医疗、教育、金融调控、信用，还没有 clear winner。</p>
+<h3 id="（2）Fashion-MNIST-数据集"><a href="#（2）Fashion-MNIST-数据集" class="headerlink" title="（2）Fashion-MNIST 数据集"></a>（2）Fashion-MNIST 数据集</h3><p>(“MNIST”的读法是“M-Nist”)</p>
+<p>介绍 Fashion-MNIST 之前，首先要介绍 MNIST 数据集。</p>
+<ul>
+<li><strong>MNIST</strong></li>
+</ul>
+<p>MNIST，<strong>M</strong>odified <strong>N</strong>ational <strong>I</strong>nstitute of <strong>S</strong>tandards and <strong>T</strong>echnology database，前面加了“modified ”是因为这个数据集已经是在原始的 NIST 数据集上修改过的版本。</p>
+<p>简单来说 MNIST 就是一个包含了 0-9 十个数字（十个类别）的手写图片数据集，都是灰度图片，每张图片 28x28 像素，每个类别 7000 张图片，一共 70000 张。并且划分了 60000 张图片作为训练集，10000 张图片作为测试集。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-9736cf593b1a5e95e5a7d86cd7a62441_720w.jpg" alt="img">MNIST</p>
+<p>MNIST 在图像分类领域非常流行，主要有两个原因：一是这个数据集特别简单，适合新手上手；二是学术圈为了比较各自的算法优劣，会在相同的数据集上训练算法，就是 MNIST。（但是现在好像用 ImageNet 更多了）</p>
+<p>MNIST 也有它的问题就是太简单了（图像分类领域的“hello world”），所以有一帮人就<strong>开发了 Fashion-MNIST 想要来取代 MNIST</strong>。</p>
+<ul>
+<li><strong>Fashion-MNIST</strong></li>
+</ul>
+<p>Fashion-MNIST 是一个德国的时装公司 Zalando 下面的研究院 Zalando Research 开发的，它用10类服装的图片取代了十类手写数字图片。十个类别分别是：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-dd4d60fec9ab1ea9a3af68e4ddee66fe_720w.jpg" alt="img">Fashion-MNIST</p>
+<p><strong>Fashion-MNIST 的设计理念就是作为 MNIST 的直接取代（direct dropin replacement），就是说以前使用 MNIST 的模型，除了数据集的链接（URL），其他什么都不用改。但替换之后的图像分类有了更高的难度。</strong>所以 Fashion-MNIST 和 MNIST 一样，都是灰度图片，28x28 像素，每类 7000 张，一共 70000 张，其中训练集 60000 张，测试集 10000 张。</p>
+<p>数据集链接：<a href="https://link.zhihu.com/?target=https://github.com/zalandoresearch/fashion-mnist">https://github.com/zalandoresearch/fashion-mnist</a></p>
+<p>Fashion-MNIST 是直接从 Zalando 网站上的商品图片提取出来制作的，包括以下7步：① 转换为PNG；② 裁剪；③ 长边缩放为28像素；④ 锐化；⑤ 补足空白；⑥ 取负片；⑦ 取灰度。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-94c56a43caef6930163eb7462f817446_720w.jpg" alt="img"></p>
+<p>关于 Fashion-MNIST 的更多细节可以参阅官网文档：</p>
+<p><a href="https://link.zhihu.com/?target=https://arxiv.org/pdf/1708.07747.pdf">Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithmsarxiv.org&#x2F;pdf&#x2F;1708.07747.pdf</a></p>
+<hr>
+<h3 id="Episode-15-of-33"><a href="#Episode-15-of-33" class="headerlink" title="- Episode 15 of 33"></a>- Episode 15 of 33</h3><p>这一集讲数据的预处理，和如何通过 PyTorch 的 torchvision 包获取 Fashion-MNIST 数据集。</p>
+<p>torchvision 包是 PyTorch 的 computer vision package for machine learning，但是目前 torchvision 和 torch 还是分开下载安装的。</p>
+<p><strong>一般而言，对一个数据集的预处理流程为 ETL，即包含 extract、transform、load 三个步骤</strong>。对于本教程涉及的 Fashion-MNIST 数据集，分别如下：</p>
+<ol>
+<li><strong>Extract（获取）</strong> - Get the Fashion-MNIST image data from the data source.</li>
+<li><strong>Transform（转换）</strong> - Transform image data into a desirable PyTorch tensor format.</li>
+<li><strong>Load（载入）</strong> - Put data into a suitable structure to make it easily accessible.</li>
+</ol>
+<p>关于 ETL 流程的更多解释：<a href="https://link.zhihu.com/?target=https://en.wikipedia.org/wiki/Extract,_transform,_load">ETL - 维基百科</a></p>
+<p>以及一个关于数据科学的补充介绍：<a href="https://link.zhihu.com/?target=https://deeplizard.com/learn/video/d11chG7Z-xk">General Data Science Pipeline</a></p>
+<p>完成 ETL 流程之后，就可以开始构建和训练深度学习模型。PyTorch具有一些内置的软件包和类（class），使 ETL 过程非常容易实现。</p>
+<p>然后……这里的车速突然就加快了，我看了好几遍才跟上，慢慢来：</p>
+<h3 id="（1）包的导入"><a href="#（1）包的导入" class="headerlink" title="（1）包的导入"></a>（1）包的导入</h3><p>首先需要把所有需要的PyTorch包导入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">import torch.nn as nn</span><br><span class="line">import torch.optim as optim</span><br><span class="line">import torch.nn.functional as F</span><br><span class="line"></span><br><span class="line">import torchvision</span><br><span class="line">import torchvision.transforms as transforms</span><br></pre></td></tr></table></figure>
+
+<p>对各个包的描述如下：</p>
+<ul>
+<li><strong>torch</strong> - The top-level PyTorch package and tensor library.</li>
+<li><strong>torch.nn</strong> - A subpackage that contains modules and extensible classes for building neural networks.</li>
+<li><strong>torch.optim</strong> - A subpackage that contains standard optimization operations like SGD and Adam.</li>
+<li><strong>torch.nn.functional</strong> - A functional interface that contains typical operations used for building neural networks like loss functions and convolutions.</li>
+<li><strong>torchvision</strong> - A package that provides access to popular datasets, model architectures, and image transformations for computer vision.</li>
+<li><strong>torchvision.transforms</strong> - An interface that contains common transforms for image processing.</li>
+</ul>
+<p>以及一些其他的常用Python科学计算包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import pandas as pd</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line">from sklearn.metrics import confusion_matrix</span><br><span class="line"># from plotcm import plot_confusion_matrix</span><br><span class="line"></span><br><span class="line">import pdb</span><br><span class="line"></span><br><span class="line">torch.set_printoptions(linewidth=120)</span><br></pre></td></tr></table></figure>
+
+<p>上面的<code>pdb</code>是Python debugger；被注掉的一行导入的是一个用于绘制混淆矩阵的本地文件（将来会用到）；最后一行用来设置PyTorch打印语句的选项（每行宽度）。</p>
+<h3 id="（2）在Pytorch中进行-ETL"><a href="#（2）在Pytorch中进行-ETL" class="headerlink" title="（2）在Pytorch中进行 ETL"></a>（2）在Pytorch中进行 ETL</h3><p>对于 ETL 流程，PyTorch 提供了两个类（class）：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-a51317278627f232bb127742cdb220d7_720w.jpg" alt="img"></p>
+<p>关于 Python 中的类是什么，我是看的这个介绍视频，还比较清楚：</p>
+<p><a href="https://link.zhihu.com/?target=https://www.bilibili.com/video/av70535119">IT教头王进带你入门Python第四讲：快速理解Python中的类_哔哩哔哩 (゜-゜)つロ 干杯~-bilibiliwww.bilibili.com/video/av70535119<img src="https://pic2.zhimg.com/v2-e5c7c109e14a5ddf707515cb02841e11_180x120.jpg" alt="img"></a></p>
+<p>我的理解就是类是比函数更高一个层级的模块化工具，它实现了函数功能和数据的集成。</p>
+<p>函数比较好理解，函数内部是编写好的功能，但函数本身不存储数据，调用函数时给函数传递一个输入，它经过计算后返回一个输出。</p>
+<p>而类比函数更高一个层级，它内部可以以类的属性存储数据，也可以在类的内部定义和调用函数对输入和存储的数据进行计算。类就是一个模块的模板，在主程序中调用时将类实例化（同一个模板可以有多个实例来储存和处理不同的数据？），并自动执行 <strong>init</strong>() 函数中的代码，对类中存储的数据还可以直接通过访问类的属性来提取。具体可以看上面视频。</p>
+<p>（这里是我猜想，没有去验证：就像之前通过 .shape 直接输出张量的 shape，其实就是创建张量时在 <strong>init</strong>() 函数中自动计算了 shape 并存储在 .shape 属性中，然后只是通过访问 .shape 属性将数据导了出来。）</p>
+<p>大佬不用看的废话说完，接着说上面两个类。</p>
+<p>torch.utils.data.Dataset 是一个 abstract class，所谓 abstract class：</p>
+<blockquote>
+<p>An <strong><a href="https://link.zhihu.com/?target=https://docs.python.org/library/abc.html">abstract class</a></strong> is a Python class that has methods we must implement, so we can create a custom dataset by <strong>creating a subclass that extends the functionality of the Dataset class</strong>.</p>
+</blockquote>
+<p>我的理解就是 abstract class 是一个预定义好的包含必要函数的类，如果你想有更多函数的话，可以利用它创建一个子类，并在子类中根据自己的需求来丰富它的函数（这样你不会改动最原来的这个相当于模板的 abstract class？）。</p>
+<p>所以为了使用 PyTorch <strong>创建自定义的数据集</strong>，我们通过创建子类并继承 Dataset 中的函数，来实现 Dataset 的扩展，然后就可以传递给 DataLoader 对象。</p>
+<p>一般来说方法如下图（可以不看）：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-1da27013a1c471ff3af37554d07e742c_720w.jpg" alt="img"></p>
+<p><strong>len</strong>() 和 <strong>getitm</strong>() 是其中两个必要的函数，前者的功能是计算数据集的长度，后者的功能是在数据集中按指定的索引编号将数据取出。</p>
+<p>但是！但是！但是！↓ ↓ ↓</p>
+<h3 id="（3）利用torchvison包获取和处理数据集（E-T）"><a href="#（3）利用torchvison包获取和处理数据集（E-T）" class="headerlink" title="（3）利用torchvison包获取和处理数据集（E+T）"></a>（3）利用torchvison包获取和处理数据集（E+T）</h3><p><strong>torchvision 包中提供了以下面向机器视觉的深度学习的有关资源</strong>：</p>
+<ul>
+<li><strong>Datasets</strong> (like MNIST and Fashion-MNIST)</li>
+<li><strong>Models</strong> (like VGG16)</li>
+<li>Transforms</li>
+<li>Utils</li>
+</ul>
+<p>所以在 PyTorch 中我们可以利用 torchvision 包来获取这些资源。</p>
+<p>前面说过 Fashion-MNIST 的设计理念是直接 dropin 替换掉 MNIST，只要在 PyTorch 中把数据集的链接（URL）改了就可以。</p>
+<p>视频中去找了 torchvision 包中 Fashion-MNIST 的源码来验证（如果你用的是 Anaconda 安装的 PyTorch 并且使用了默认路径的话，源码地址在这：C:\ProgramData\Anaconda3\Lib\site-packages\torchvision\datasets\mnist.py），然后发现里面的 Fashion-MNIST 类确实是 extend from MNIST 类，而且确实是只改了 url（我这里是0.5.0版本的 torchvision，下面还多了每个类别的描述）：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-f85c499962e17464b519db70990ad46e_720w.jpg" alt="img"></p>
+<p>于是，如果需要利用 torchvision 获取并创建 Fashion-MNIST 数据集的一份实例（instance），这个过程中同时完成的数据集的<strong>获取（E）</strong>和<strong>转化（T）</strong>，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">train_set = torchvision.datasets.FashionMNIST(</span><br><span class="line">    root=&#x27;./data&#x27;</span><br><span class="line">    ,train=True</span><br><span class="line">    ,download=True</span><br><span class="line">    ,transform=transforms.Compose([</span><br><span class="line">        transforms.ToTensor()</span><br><span class="line">    ])</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>返回的状态应该是这样的：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-6a5e68d32cf1d77d43a378a4e1dabe2e_720w.jpg" alt="img"></p>
+<p>上面各个参数解释如下：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-37d8c6fe04a001dc201d468cbaba2367_720w.jpg" alt="img"></p>
+<p>因为希望将图片数据集转换为张量，所以在 transform 中使用了 transforms.ToTensor()；将此数据集命名为train_set，是因为我们希望将其作为训练数据；另外数据集仅会被下载一次，程序下载之前会检查本地有没有。</p>
+<p>之后将获取的 train_set 打包给 DataLoader，使得数据集可以通过 DataLoader 方便的访问和加载<strong>（L）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train_loader = torch.utils.data.DataLoader(train_set)</span><br></pre></td></tr></table></figure>
+
+<p>至此已经完成了数据集的 Extract（利用url从网页下载）和 Transform（上面的transforms.ToTensor()），并且已经打包给了 DataLoader，可以通过 DataLoader 来实现 Load，比如设置 batch_size 和 shuffle（洗牌，图片的随机重排？）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">train_loader = torch.utils.data.DataLoader(train_set</span><br><span class="line">    ,batch_size=1000</span><br><span class="line">    ,shuffle=True</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>小结：利用<code>torch.utils.data</code>包中的 Datasets 和 DataLoaders，配合 torchvision 包，可以大大简化 ETL 工作流程。</p>
+<hr>
+<h3 id="Episode-16-of-33"><a href="#Episode-16-of-33" class="headerlink" title="- Episode 16 of 33"></a>- Episode 16 of 33</h3><p>最后这一集讲的是利用上面提到的<code>Dataset</code>和<code>DataLoader</code>两个PyTorch类来访问数据集，以查看其中的图片和标签。这一集需要用的的包在上一集导入包的笔记部分包括了。</p>
+<p>在上一集中已经利用 Dataset 和 DataLoader 两个类创建了 train_set 和 train_loader 两个对象。</p>
+<p>首先可以查看数据集中有多少个图片，使用 Python 的 <strong>len()</strong> 函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; len(train_set)</span><br><span class="line">60000</span><br></pre></td></tr></table></figure>
+
+<p>Fashion-MNIST 数据集中的训练集有 60000 张图片，与查询结果是符合的。（此处疑问：测试集是需要单独从数据源提取一次吗？）</p>
+<p>如果希望查看所有图片的标签，只需要访问 <strong>train_set.targets</strong> 属性（适用于 PyTorch 0.2.2 及以后版本）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; train_set.targets</span><br><span class="line">tensor([9, 0, 0, ..., 3, 0, 5])</span><br></pre></td></tr></table></figure>
+
+<p>数字编号和语义标签的对应关系可以参照上面的 Fashion-MNIST 说明。</p>
+<p>如果希望查看数据集中每一个类别有多少个标签（即多少个图片，适用于图片全部有标记的情况），可以用 PyTorch 的 <strong>bincount()</strong> 函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; train_set.targets.bincount()</span><br><span class="line">tensor([6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000, 6000])</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 Fashion-MNIST 数据集中每一类都有 6000 个图片和标签对，这种每一类的样本数量相等的数据集称作 balanced dataset，反之类别之间样本数量不一致的数据集称为 unbalanced dataset。</p>
+<p>关于 unbalanced dataset，这里有一篇论文专门讨论这个问题：</p>
+<p><a href="https://link.zhihu.com/?target=https://arxiv.org/abs/1710.05381">A systematic study of the class imbalance problem in convolutional neural networksarxiv.org&#x2F;abs&#x2F;1710.05381</a></p>
+<p>论文的结论简要概括为：类不平衡有损于CNN的分类性能，通过对样本数量少的类进行超采样是解决此问题的最佳办法（甚至就是简单复制以扩充样本数量）。</p>
+<h3 id="（1）访问和查看-train-set-中的单个数据"><a href="#（1）访问和查看-train-set-中的单个数据" class="headerlink" title="（1）访问和查看 train_set 中的单个数据"></a>（1）访问和查看 train_set 中的单个数据</h3><p>如果只希望一次只查看单张图片，首先<strong>将 train_set 这个对象传递给 Python 内建的 iter() 函数</strong>，它会返回一个可以在其上迭代的代表数据流（stream of data）的对象，使我们可以沿数据流访问数据。</p>
+<p>接下来再使用 Python 的内建函数 next() 来获取数据流中的下一个数据元素，如此就可以获取数据集中的一个单独数据（因此下面命名变量都是单数形式）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; sample = next(iter(train_set))</span><br><span class="line"></span><br><span class="line">&gt; len(sample)</span><br><span class="line">2</span><br><span class="line"></span><br><span class="line">&gt; type(sample)</span><br><span class="line">tuple</span><br></pre></td></tr></table></figure>
+
+<p>发现获取的一个单独数据长度为 2，这是因为数据集是由图片-标签对的形式组成的，每一个 data element 中都包含两个东西，一个是存储图片数据的张量，另一个是其对应的标签。</p>
+<p>sample 的数据类型是 tuple，tuple 是Python中的一种 sequence types，是一个可以迭代的顺序不可变的数据序列？参阅：<a href="https://link.zhihu.com/?target=https://docs.python.org/3/library/stdtypes.html%23typesseq">官方文档</a></p>
+<p>可以用 sequence unpacking 来将其中的图像和标签分别提取出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; image, label = sample</span><br></pre></td></tr></table></figure>
+
+<p>和下面这种写法是等效的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; image = sample[0]</span><br><span class="line">&gt; label = sample[1]</span><br></pre></td></tr></table></figure>
+
+<p>可以进一步查看数据类型和shape：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; type(image)</span><br><span class="line">torch.Tensor</span><br><span class="line"></span><br><span class="line">&gt; type(label)</span><br><span class="line">int</span><br><span class="line"></span><br><span class="line">&gt; image.shape</span><br><span class="line">torch.Size([1, 28, 28]) </span><br><span class="line"></span><br><span class="line">&gt; torch.tensor(label).shape</span><br><span class="line">torch.Size([])</span><br></pre></td></tr></table></figure>
+
+<p>因为 Fashion-MNIST 数据集是单通道的灰度图，所一张图片的 tensor shape 就是 1x28x28。把没有用的颜色通道 squeeze 掉：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; image.squeeze().shape</span><br><span class="line">torch.Size([28, 28])</span><br></pre></td></tr></table></figure>
+
+<p>接下来就可以显示出图片和标签了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; plt.imshow(image.squeeze(), cmap=&quot;gray&quot;)</span><br><span class="line">&gt; torch.tensor(label)</span><br><span class="line">tensor(9)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic3.zhimg.com/80/v2-26e811357f5fccfa24ad51b39be9d8fe_720w.jpg" alt="img"></p>
+<p>标签是“9”，代表靴子，与图片是相符的。</p>
+<h3 id="（2）利用-DataLoader-成批访问数据"><a href="#（2）利用-DataLoader-成批访问数据" class="headerlink" title="（2）利用 DataLoader 成批访问数据"></a>（2）利用 DataLoader 成批访问数据</h3><p>这里就用到上一集末尾提到的 DataLoader 中的 batch size 了，如果不指定 batch size 则默认为 1：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; batch = next(iter(train_loader))</span><br><span class="line"></span><br><span class="line">&gt; len(batch)</span><br><span class="line">2</span><br><span class="line"></span><br><span class="line">&gt; type(batch)</span><br><span class="line">list</span><br></pre></td></tr></table></figure>
+
+<p>list 也是一种 Python sequence types，与 tuple 的不同在于 list 是可变序列的？可能是传递给 DataLoader 之后自动转换的？具体可以看上面给出链接的官方文档。</p>
+<p>比如一次访问 10 张图片，则需要给 DataLoader 指定 batch_size：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; display_loader = torch.utils.data.DataLoader(</span><br><span class="line">    train_set, batch_size=10</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>关于 DataLoader 中的“shuffle&#x3D;True”：如果“shuffle&#x3D;True”，则每次调用 next() 返回的 batch 都会不同，训练集中的第一组样本将在第一次调用 next() 时返回，这个功能默认是 False。</p>
+<p>接下来就可以像上面一样对 display_loader 使用 iter() 和 next() 来每次查看 10 张图片：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; batch = next(iter(display_loader))</span><br><span class="line">&gt; print(&#x27;len:&#x27;, len(batch))</span><br><span class="line">len: 2</span><br></pre></td></tr></table></figure>
+
+<p>同样进行 sequence unpacking：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; images, labels = batch</span><br><span class="line"></span><br><span class="line">&gt; print(&#x27;types:&#x27;, type(images), type(labels))</span><br><span class="line">&gt; print(&#x27;shapes:&#x27;, images.shape, labels.shape)</span><br><span class="line">types: &lt;class &#x27;torch.Tensor&#x27;&gt; &lt;class &#x27;torch.Tensor&#x27;&gt;</span><br><span class="line">shapes: torch.Size([10, 1, 28, 28]) torch.Size([10])</span><br></pre></td></tr></table></figure>
+
+<p>可以发现此时返回的图像张量是 [10, 1, 28, 28] 的四阶张量，标签是一个长度为 10 的一阶张量。可以单独查看其中每一个图片和标签：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; images[0].shape</span><br><span class="line">torch.Size([1, 28, 28])</span><br><span class="line"></span><br><span class="line">&gt; labels[0]</span><br><span class="line">tensor(9)</span><br></pre></td></tr></table></figure>
+
+<p>要一次绘制一批图像，可以使用 <strong>torchvision.utils.make_grid()</strong> 函数创建一个可以按网格绘制图片的 grid：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; grid = torchvision.utils.make_grid(images, nrow=10)    # nrow指定每行多少列图片</span><br><span class="line"></span><br><span class="line">&gt; plt.figure(figsize=(15,15))        # figsize=(a, b) 设置图形的大小，a为图形的宽， b为图形的高，单位为英寸</span><br><span class="line">&gt; plt.imshow(np.transpose(grid, (1,2,0)))  # 作用与下面一句代码相同</span><br><span class="line">&gt; plt.imshow(grid.permute(1,2,0))    # 这一步让grid符合imshow的要求，不清楚细节</span><br><span class="line"></span><br><span class="line">&gt; print(&#x27;labels:&#x27;, labels)</span><br><span class="line">labels: tensor([9, 0, 0, 3, 0, 2, 7, 2, 5, 5])</span><br></pre></td></tr></table></figure>
+
+<p><strong>解释</strong>：在plt.imshow在显示图片的时候输入的是（imagesize,imagesize,channels）,而def imshow(img,text,should_save&#x3D;False)中，参数img的格式为（channels,imagesize,imagesize）,这两者的格式不一致，我们需要调用一次np.transpose函数，即np.transpose(npimg,(1,2,0))，将npimg的数据格式由（channels,imagesize,imagesize）转化为（imagesize,imagesize,channels）,进行格式的转换后方可进行显示。或者如上图第二种实现，原理应该是相同的。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-c11b72881cf235329529ec16200554fd_720w.jpg" alt="img"></p>
+<p>然后还有一个更好看的（更秀的）显示方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">how_many_to_plot = 20</span><br><span class="line"></span><br><span class="line">train_loader = torch.utils.data.DataLoader(</span><br><span class="line">    train_set, batch_size=1, shuffle=True</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">mapping = &#123;</span><br><span class="line">    0:&#x27;Top&#x27;, 1:&#x27;Trousers&#x27;, 2:&#x27;Pullover&#x27;, 3:&#x27;Dress&#x27;, 4:&#x27;Coat&#x27;</span><br><span class="line">    ,5:&#x27;Sandal&#x27;, 6:&#x27;Shirt&#x27;, 7:&#x27;Sneaker&#x27;, 8:&#x27;Bag&#x27;, 9:&#x27;Ankle Boot&#x27;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(50,50))</span><br><span class="line"></span><br><span class="line">for i, batch in enumerate(train_loader, start=1):</span><br><span class="line">    image, label = batch</span><br><span class="line">    plt.subplot(10,10,i)</span><br><span class="line">    fig = plt.imshow(image.reshape(28,28), cmap=&#x27;gray&#x27;)</span><br><span class="line">    fig.axes.get_xaxis().set_visible(False)</span><br><span class="line">    fig.axes.get_yaxis().set_visible(False)</span><br><span class="line">    plt.title(mapping[label.item()], fontsize=28)</span><br><span class="line">    if (i &gt;= how_many_to_plot): break</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic2.zhimg.com/80/v2-f3089b255d3e301975454cac42fc7c75_720w.jpg" alt="img"></p>
+<hr>
+<p>这一部分结束，我感觉目前看好像图片数据的预处理主要就是把图片裁剪缩放到合适的尺寸（成熟的数据集已经做好这步了），然后把图片转用张量表示就行了。</p>
+<p>接下来就要开始构建卷积神经网络了。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Pytorch_DeepLizard教程14-16：训练数据与预处理</p><p><a href="https://paddeyzhang.tech/2021/11/02/Pytorch_DeepLizard教程14-16：训练数据与预处理/">https://paddeyzhang.tech/2021/11/02/Pytorch_DeepLizard教程14-16：训练数据与预处理/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>paddeyzhang</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-11-02</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2021-11-03</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/">机器学习 深度学习 Pytorch</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/11/03/Pytorch_DeepLizard%E6%95%99%E7%A8%8B17-19%EF%BC%9A%E6%9E%84%E5%BB%BACNN%EF%BC%88%E4%B8%8A%EF%BC%89%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E5%B1%82/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Pytorch_DeepLizard教程17-19：构建CNN（上）神经网络的层</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/11/01/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_FP-Growth%E7%AE%97%E6%B3%95/"><span class="level-item">数据挖掘学习_FP-Growth算法</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="PaddeyZhang"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">PaddeyZhang</p><p class="is-size-6 is-block">Master of Computer Science and Technology (GDUT)</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>GuangZhou, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">32</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">8</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/polaris-973" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Email" href="mailto:paddeyzhang@gmail.com"><i class="fas fa-envelope"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/polaris-973"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">Categories</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Latex/"><span class="level-start"><span class="level-item">Latex</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/OpenCV/"><span class="level-start"><span class="level-item">OpenCV</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2-Github-hexo/"><span class="level-start"><span class="level-item">创建博客_Github_hexo</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%B7%E9%A2%98/"><span class="level-start"><span class="level-item">刷题</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">数学理论学习</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="level-start"><span class="level-item">数据挖掘</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">机器学习 深度学习</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="level-start"><span class="level-item">机器学习 深度学习 Pytorch</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="level-start"><span class="level-item">统计学习方法</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.963Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E5%A4%9A%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8BAccuracy,%20Precision,%20Recall%E5%92%8CF1-score%E7%9A%84%E8%B6%85%E7%BA%A7%E6%97%A0%E6%95%8C%E6%B7%B1%E5%85%A5%E6%8E%A2%E8%AE%A8/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.940Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.925Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/URLNet/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.799Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/Pytorch_DeepLizard%E6%95%99%E7%A8%8B27%EF%BC%9A%E4%BD%BF%E7%94%A8Pytorch%E5%88%9B%E5%BB%BA%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.717Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/OLAP%E5%92%8C%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93/"> </a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">February 2023</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">13</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">Tags</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Latex/"><span class="tag">Latex</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">傅里叶变换 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%B7%E9%A2%98-leetcode-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">刷题 leetcode 数据结构</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">数据挖掘 数学理论</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="tag">机器学习 深度学习 Pytorch</span><span class="tag">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%BC%8F-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">泰勒展开式 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">线性代数 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="tag">统计学习方法</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 paddeyzhang</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>数据挖掘学习_Apriori算法 - Paddey&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Paddey&#039;s Blog"><meta name="msapplication-TileImage" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Paddey&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Assocation Role 关联规则目的：在庞大的元素库中找出元素之间的关联关系 这个规则主要应用在商品的推销上（啤酒与尿布） 还可以延伸用于文字分析，把单个单词看做元素，对每篇文章分析即可得出单词之间的关联关系"><meta property="og:type" content="blog"><meta property="og:title" content="数据挖掘学习_Apriori算法"><meta property="og:url" content="https://paddeyzhang.tech/2021/10/31/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_Apriori%E7%AE%97%E6%B3%95/"><meta property="og:site_name" content="Paddey&#039;s Blog"><meta property="og:description" content="Assocation Role 关联规则目的：在庞大的元素库中找出元素之间的关联关系 这个规则主要应用在商品的推销上（啤酒与尿布） 还可以延伸用于文字分析，把单个单词看做元素，对每篇文章分析即可得出单词之间的关联关系"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211031225335943.png"><meta property="article:published_time" content="2021-10-31T13:46:13.000Z"><meta property="article:modified_time" content="2023-02-18T05:05:29.171Z"><meta property="article:author" content="paddeyzhang"><meta property="article:tag" content="数据挖掘 数学理论"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211031225335943.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://paddeyzhang.tech/2021/10/31/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_Apriori%E7%AE%97%E6%B3%95/"},"headline":"数据挖掘学习_Apriori算法","image":["https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211031225335943.png"],"datePublished":"2021-10-31T13:46:13.000Z","dateModified":"2023-02-18T05:05:29.171Z","author":{"@type":"Person","name":"paddeyzhang"},"publisher":{"@type":"Organization","name":"Paddey's Blog","logo":{"@type":"ImageObject","url":"https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"}},"description":"Assocation Role 关联规则目的：在庞大的元素库中找出元素之间的关联关系 这个规则主要应用在商品的推销上（啤酒与尿布） 还可以延伸用于文字分析，把单个单词看做元素，对每篇文章分析即可得出单词之间的关联关系"}</script><link rel="canonical" href="https://paddeyzhang.tech/2021/10/31/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%AD%A6%E4%B9%A0_Apriori%E7%AE%97%E6%B3%95/"><link rel="icon" href="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-31T13:46:13.000Z" title="10/31/2021, 21:46:13">2021-10-31</time></span><span class="level-item">Updated&nbsp;<time dateTime="2023-02-18T05:05:29.171Z" title="2/18/2023, 13:05:29">2023-02-18</time></span><span class="level-item"><a class="link-muted" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span><span class="level-item">6 minutes read (About 919 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">数据挖掘学习_Apriori算法</h1><div class="content"><h2 id="Assocation-Role-关联规则"><a href="#Assocation-Role-关联规则" class="headerlink" title="Assocation Role 关联规则"></a>Assocation Role 关联规则</h2><p>目的：在庞大的元素库中找出元素之间的关联关系</p>
+<p>这个规则主要应用在商品的推销上（啤酒与尿布）</p>
+<p>还可以延伸用于<strong>文字分析</strong>，把单个单词看做元素，对每篇文章分析即可得出单词之间的关联关系</p>
+<span id="more"></span>
+
+<h2 id="Support-amp-Confidence-of-Association-Role-支持度-置信度"><a href="#Support-amp-Confidence-of-Association-Role-支持度-置信度" class="headerlink" title="Support&amp;Confidence of Association Role 支持度 置信度"></a>Support&amp;Confidence of Association Role 支持度 置信度</h2><h3 id="名词定义："><a href="#名词定义：" class="headerlink" title="名词定义："></a>名词定义：</h3><ul>
+<li><p>支持度：在关联规则分析中就是<strong>频率</strong> –&gt; 关联发生的次数 &#x2F; 总次数</p>
+</li>
+<li><p>置信度：为在某元素出现的情况下关联发生的概率，即<strong>条件概率</strong> –&gt; 关联发生的次数 &#x2F; 包含某一元素的次数</p>
+</li>
+<li><p>注意规则顺序，<strong>顺序相反分母会变化，Confidence也会变化</strong></p>
+</li>
+<li><p>频繁项集：<strong>项集<em>I</em>的相对支持度满足预定义的最小支持度阈值，则<em>I</em>是频繁项集</strong></p>
+</li>
+<li><p>强关联规则：<strong>同时满足最小支持度和最小置信度的关联规则称为强关联规则</strong></p>
+</li>
+</ul>
+<h3 id="关联规则挖掘"><a href="#关联规则挖掘" class="headerlink" title="关联规则挖掘"></a>关联规则挖掘</h3><p>关联规则挖掘是一个两步的过程：</p>
+<ol>
+<li>找出所有的频繁项集</li>
+<li>由频繁项集产生强关联规则</li>
+</ol>
+<p><strong>主要挑战</strong>是：常产生大量满足最小支持度阈值的项集，当最小支持度设置得很低得时候尤为如此。这是因为如果一个项集是频繁得，则它的每一个子集也是频繁的。一个长项集将包含<strong>组合个数</strong>较短的频繁子项集。</p>
+<p>宏观处理：</p>
+<ol>
+<li>设置一个支持度、置信度的一个限值</li>
+<li>把所有频繁的组合找出来</li>
+<li>生成频繁组合的所有非空子集，并写出所有可能的子集关联规则</li>
+<li>计算所有子集关联规则的支持度与置信度</li>
+<li>比较子集的支持度、置信度与设定的限值，若超过则认为关联性强</li>
+</ol>
+<h2 id="About-Assocation-Role-关联规则的误区"><a href="#About-Assocation-Role-关联规则的误区" class="headerlink" title="About Assocation Role 关联规则的误区"></a>About Assocation Role 关联规则的误区</h2><p>规则的关联性很强并不一定代表该规则有意义（当两个元素频率差别特别大时尤为明显）</p>
+<p>关联规则就是一个条件概率，两件事物相关，<strong>并不一定代表他们之间有代表因果关系</strong>，不应做过多解释。</p>
+<h2 id="Apriori-algorithm-Apriori算法"><a href="#Apriori-algorithm-Apriori算法" class="headerlink" title="Apriori algorithm Apriori算法"></a>Apriori algorithm Apriori算法</h2><p>元素因为排列组合，所有可能的<strong>非空</strong>关联的数量非常庞大，为<br>$$<br>2^d-1<br>$$<br>所以不能用传统方法解决。</p>
+<h3 id="Apriori算法原理："><a href="#Apriori算法原理：" class="headerlink" title="Apriori算法原理："></a>Apriori算法原理：</h3><ol>
+<li><strong>任何一个频繁项的子集必须频繁</strong></li>
+<li><strong>如果某个规则不频繁，那么他的超集必须不频繁</strong></li>
+</ol>
+<p>具体做法就是： </p>
+<p>​		首先找出频繁1-项集，记为L1；然后利用L1来产生候选项集C2，对C2中的项进行判定挖掘出L2，即频繁2-项集；不断如此循环下去直到无法发现更多的频繁k-项集为止。每挖掘一层Lk就需要扫描整个数据库一遍。算法利用了一个性质：任一频繁项集的所有非空子集也必须是频繁的。</p>
+<p>核心思想：尽量避免生成不频繁集</p>
+<ul>
+<li><p>优点：易编码</p>
+</li>
+<li><p>缺点：本算法需要频繁扫描数据库，而这种操作在大型数据库中成本较高</p>
+</li>
+<li><p>适用数据类型：数值型 或者 标称型数据。</p>
+</li>
+</ul>
+<p><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/image-20211031225335943.png" alt="image-20211031225335943"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/llhthinker/MachineLearningLab/tree/master/Frequent%20Itemset%20Mining">代码python实现</a></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>数据挖掘学习_Apriori算法</p><p><a href="https://paddeyzhang.tech/2021/10/31/数据挖掘学习_Apriori算法/">https://paddeyzhang.tech/2021/10/31/数据挖掘学习_Apriori算法/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>paddeyzhang</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-10-31</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2023-02-18</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/">数据挖掘 数学理论</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/11/01/Pytorch_DeepLizard%E6%95%99%E7%A8%8B8-9%EF%BC%9A%E5%9C%A8PyTorch%E4%B8%AD%E5%88%9B%E5%BB%BAtensor/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Pytorch_DeepLizard教程8-9：在PyTorch钟创建tensor</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/10/31/Pytorch_DeepLizard%E6%95%99%E7%A8%8B1-4%EF%BC%9APyTorch%E7%AE%80%E4%BB%8B/"><span class="level-item">Pytorch_DeepLizard教程1-4：PyTorch简介</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="PaddeyZhang"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">PaddeyZhang</p><p class="is-size-6 is-block">Master of Computer Science and Technology (GDUT)</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>GuangZhou, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">32</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">8</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/polaris-973" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Email" href="mailto:paddeyzhang@gmail.com"><i class="fas fa-envelope"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/polaris-973"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">Categories</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Latex/"><span class="level-start"><span class="level-item">Latex</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/OpenCV/"><span class="level-start"><span class="level-item">OpenCV</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2-Github-hexo/"><span class="level-start"><span class="level-item">创建博客_Github_hexo</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%88%B7%E9%A2%98/"><span class="level-start"><span class="level-item">刷题</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">数学理论学习</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"><span class="level-start"><span class="level-item">数据挖掘</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="level-start"><span class="level-item">机器学习 深度学习</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="level-start"><span class="level-item">机器学习 深度学习 Pytorch</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="level-start"><span class="level-item">统计学习方法</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.963Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E5%A4%9A%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8BAccuracy,%20Precision,%20Recall%E5%92%8CF1-score%E7%9A%84%E8%B6%85%E7%BA%A7%E6%97%A0%E6%95%8C%E6%B7%B1%E5%85%A5%E6%8E%A2%E8%AE%A8/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.940Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.925Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/URLNet/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.799Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/Pytorch_DeepLizard%E6%95%99%E7%A8%8B27%EF%BC%9A%E4%BD%BF%E7%94%A8Pytorch%E5%88%9B%E5%BB%BA%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-19T14:25:29.717Z">2023-02-19</time></p><p class="title"><a href="/2023/02/19/OLAP%E5%92%8C%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93/"> </a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">February 2023</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">13</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">Tags</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Latex/"><span class="tag">Latex</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">傅里叶变换 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%B7%E9%A2%98-leetcode-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">刷题 leetcode 数据结构</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">数据挖掘 数学理论</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-Pytorch/"><span class="tag">机器学习 深度学习 Pytorch</span><span class="tag">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%BC%8F-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">泰勒展开式 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E6%95%B0%E5%AD%A6%E7%90%86%E8%AE%BA/"><span class="tag">线性代数 数学理论</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"><span class="tag">统计学习方法</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="https://polaris-973.oss-cn-shenzhen.aliyuncs.com/img/b9c9db0f589cd855eb655fce4054665.jpg" alt="Paddey&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 paddeyzhang</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
